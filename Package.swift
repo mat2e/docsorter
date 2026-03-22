@@ -1,15 +1,15 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.2
 import PackageDescription
 
 let package = Package(
     name: "docsorter",
     platforms: [
-        .macOS(.v15)
+        .macOS(.v26)
     ],
     targets: [
         .executableTarget(
             name: "docsorter",
-            path: "Sources/docsorter"
+            // path: "Sources/docsorter"
         )
     ]
 )

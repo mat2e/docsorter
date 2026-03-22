@@ -8,6 +8,10 @@
 
 import Foundation
 
+struct DebugConfig: Codable {
+    let keepOriginals: Bool
+}
+
 struct FamilyMember: Codable {
     let fullName: String
     let shortName: String
@@ -35,6 +39,11 @@ struct Config: Codable {
     let outputRules: [OutputRule]
     let baseOutputDir: String
     let confidence: ConfidenceConfig
+    let debug: DebugConfig?
+  
+    var shouldKeepOriginals: Bool {
+        debug?.keepOriginals ?? false
+    }
 
     // MARK: - Laden
 
@@ -77,6 +86,28 @@ struct Config: Codable {
     func topic(forInboxPath path: String) -> String?? {
         inboxFolderToTopic[path]
     }
+  
+  // MARK: - Pfad-Hilfsmethoden
+
+  // In Config:
+  var expandedBaseOutputDir: String {
+      baseOutputDir.expandingTildeInPath
+  }
+
+  func expandedInboxFolderToTopic() -> [String: String?] {
+      Dictionary(uniqueKeysWithValues:
+          inboxFolderToTopic.map { key, value in
+              (key.expandingTildeInPath, value)
+          }
+      )
+  }
+
+}
+
+extension String {
+    var expandingTildeInPath: String {
+        (self as NSString).expandingTildeInPath
+    }
 }
 
 // MARK: - Fehler
@@ -92,23 +123,5 @@ enum ConfigError: LocalizedError {
     }
 }
 
-// MARK: - Pfad-Hilfsmethoden
 
-extension String {
-    var expandingTildeInPath: String {
-        (self as NSString).expandingTildeInPath
-    }
-}
 
-// In Config:
-var expandedBaseOutputDir: String {
-    baseOutputDir.expandingTildeInPath
-}
-
-func expandedInboxFolderToTopic() -> [String: String?] {
-    Dictionary(uniqueKeysWithValues:
-        inboxFolderToTopic.map { key, value in
-            (key.expandingTildeInPath, value)
-        }
-    )
-}

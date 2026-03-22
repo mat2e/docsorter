@@ -1,0 +1,9 @@
+//
+//  .gitignore
+//  docsorter
+//
+//  Created by Matthias Wronka on 22.03.26.
+//
+
+.swiftpm
+.build
